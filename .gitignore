@@ -2,7 +2,8 @@
 
 # C extensions
 *.so
-
+*.pklsongs
+*.pklwords
 # Packages
 *.egg
 *.egg-info

@@ -30,7 +30,11 @@ def generate():
             word_maps.append(cPickle.load(open(artist_cache[name][0])))
             all_songs += cPickle.load(open(artist_cache[name][1]))
         else:
-            word_map = wordmapper.create(name)
+            try:
+                word_map = wordmapper.create(name)
+            except Exception:
+                error = "Could not find an artist named {0}".format(name)
+                return render_template('index.html',error=error)
             artist_songs = wordmapper.get_songs(name)
             filename = make_file_safe_name(name)
             cPickle.dump(word_map, open(filename+'words','w'))

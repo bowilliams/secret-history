@@ -1,11 +1,15 @@
 <!doctype html>
 <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap-theme.min.css">
-
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    {% block body %}{% endblock %}
-
+    <div class="col-md-4">
+      About this project: The Secret History was created at <a href="http://boston.musichackday.org/2013/">Boston Music Hack Day</a> by Bo Williams.
+      <br/>
+      You can see the code <a href="http://www.github.com/bowilliams/secret-history">at Github</a> and follow me <a href="http://twitter.com/mrboboto">@mrboboto</a>
+    </div>
+    <div class="col-md-8">
+      {% block body %}{% endblock %}
+    </div>

@@ -1,10 +1,33 @@
 {% extends "layout.html" %}
 {% block body %}
 <h2>The Secret History of Music</h2>
-<form action="{{ url_for('generate') }}" method="post">
-  
-  Enter an artist's name: <input required name="artist1" placeholder="Michael Jackson" /><br/>
-      And another: <input required name="artist2" placeholder="Michael McDonald" /><br/>
-      <input type="submit" name="submit" value="Find their secrets...." />
-    </form>
+<div class="well well-lg">
+<form class="bs-example bs-horizontal" action="{{ url_for('generate') }}" method="post">
+  {% if error %}
+  <div class="col-lg-4">
+    <div class="alert alert-dismissable alert-danger">
+      <button type="button" class="close" data-dismiss="alert">×</button>
+      <strong>Oh snap!</strong> {{ error }}                                            
+    </div>
+  </div>
+  {% endif %}
+  <div class="form-group">
+    <label for="artist1" class="col-lg-2 control-label">Enter an artist's name</label>
+    <div class="col-lg-10">
+      <input class="form-control" required name="artist1" placeholder="Michael Jackson" />
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="artist2" class="col-lg-2 control-label">And another</label>
+    <div class="col-lg-10">
+      <input class="form-control" required name="artist2" placeholder="Michael McDonald" />
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-10 col-lg-offset-2">
+      <button class="btn btn-primary" type="submit">Find their secrets....</button>
+    </div>
+  </div>
+</form>
+</div>
 {% endblock %}
