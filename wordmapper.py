@@ -113,7 +113,7 @@ def create_corpus(name):
         if len(bio['text']) < 200:
             continue
         #raw_bios.write('site-' + bio['site'] + '\n---\n' + bio['text']+'\n----\n')
-        text = bio['text'].replace(name,name.replace(' ',''))
+        text = bio['text'].replace(name,name.replace(' ','+'))
         
         for line in text.split('\n'):
             # skip wikipedia headers

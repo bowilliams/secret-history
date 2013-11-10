@@ -8,7 +8,7 @@ def make_title(artists):
     return TITLE.format(random.choice(artists[0].split(' ')), random.choice(artists[1].split(' ')))
 
 def find_artist_starting_point(word_map, artists):
-    ccArtists = [x.replace(' ','') for x in artists]
+    ccArtists = [x.replace(' ','+') for x in artists]
     possibles = []
     for (k1,k2) in word_map.keys():
         if k1 in ccArtists:
@@ -41,7 +41,7 @@ def generate_book(artists, word_map, songs):
     max_chapter_length = random.randint(15,25)
     num_paragraphs = 0
     # init book
-    chapter_text = one + " " + two + " "
+    chapter_text = clean(one) + " " + clean(two) + " "
     while True:
         if not word_map.has_key((one, two)):
             (one, two) = find_artist_starting_point(word_map, artists)
