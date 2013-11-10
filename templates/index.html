@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>The Secret History of Music</h2>
+<form action="{{ url_for('generate') }}" method="post">
+  
+  Enter an artist's name: <input required name="artist1" placeholder="Michael Jackson" /><br/>
+      And another: <input required name="artist2" placeholder="Michael McDonald" /><br/>
+      <input type="submit" name="submit" value="Find their secrets...." />
+    </form>
+{% endblock %}

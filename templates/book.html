@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>{{ book['Title'] }}</h1>
+    {% for chapter in book['Chapters'] %}
+    <h2>{{ chapter['Head'] }}</h2>
+    <h3>{{ chapter['Subhead'] }}</h3>
+    <div style="chaptertext">{{ chapter['Text']|safe }}</div>
+    {% endfor %}
+{% endblock %}

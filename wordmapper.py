@@ -2,10 +2,21 @@ from pyechonest import artist as en_artist, song as en_song
 import cPickle
 import re
 import sys
-from pymarkovchain import MarkovChain
 
 from pyechonest import config
 config.ECHO_NEST_API_KEY=cPickle.load(open('api_key.pkl'))
+
+def consolidate(word_maps):
+    new_map = {}
+    for map in word_maps:
+        for key in map:
+            if new_map.has_key(key):
+                for val in map[key]:
+                    if val not in new_map[key]:
+                        new_map[key].append(val)
+            else:
+                new_map[key] = map[key]
+    return new_map
 
 def create(name):
     # let's grab some text for our artist
@@ -13,7 +24,28 @@ def create(name):
     return create_wordmap(corpus)
 
 def create_wordmap(corpus):
-    pass
+    word_map = {}
+    for line in corpus.split('\n'):
+        # restart at each line (should just be one huge line anyway)
+        one = None
+        two = None
+        for word in line.split():
+            word = word.strip()
+            if not one:
+                one = word
+                continue
+            if not two:
+                two = word
+                continue
+            if word_map.has_key((one, two)):
+                if word in word_map[(one, two)]:
+                    continue
+                word_map[(one, two)].append(word)
+            else:
+                word_map[(one, two)] = [word]
+            one = two
+            two = word
+    return word_map
 
 def create_corpus(name):
     artist = en_artist.Artist(name)
@@ -48,16 +80,11 @@ def create_corpus(name):
     #    corpus = corpus + u' ' + review['summary'].replace(name,name.replace(' ',''))
     return corpus
 
-f = codecs.open('mileydavis.txt',encoding='utf-8',mode='w')
-f.write(corpus)
-f.close()
-
-# get 50 hottest songs for each artist to use as chapter headings
-song_titles = []
-for name in artist_names:
+def get_songs(name):
+    # get 50 hottest songs for each artist to use as chapter headings
+    song_titles = []
     songs = en_song.search(artist=name,results=50,sort='song_hotttnesss-desc')
     for song in songs:
         if song.title not in song_titles:
             song_titles.append(song.title)
-f = open('songtitles.pkl','w')
-cPickle.dump(song_titles,f)
+    return song_titles
