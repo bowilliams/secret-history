@@ -136,6 +136,13 @@ def create_corpus(name):
     #    corpus = corpus + u' ' + review['summary'].replace(name,name.replace(' ',''))
     return corpus
 
+def get_images(name):
+    image_urls = []
+    artist = en_artist.Artist(name)
+    for img in artist.images:
+        image_urls.append(img['url'])
+    return image_urls
+
 def get_songs(name):
     # get 50 hottest songs for each artist to use as chapter headings
     song_titles = []

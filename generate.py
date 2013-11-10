@@ -30,7 +30,7 @@ def clean(text):
     # strip out special chars we use
     return text.replace('+',' ')
 
-def generate_book(artists, word_map, songs):
+def generate_book(artists, word_map, songs, images):
     book = {'Title': make_title(artists),
             'Chapters': []}
     # find a random starting point and get going
@@ -67,6 +67,9 @@ def generate_book(artists, word_map, songs):
             cur_paragraph_length = 0
             max_paragraph_length = random.randint(200,300)
             chapter_text += "<p>"
+            if (random.choice(xrange(1,20)) == 1):
+                image = random.choice(images)
+                chapter_text += '<img src="{0}" style="max-width:300px;max-height:300px;float:{1}"/>'.format(image, random.choice(['left','right']))
         else:
             chapter_text += clean(next) + " "
             cur_paragraph_length += len(next)

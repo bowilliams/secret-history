@@ -43,10 +43,12 @@ def generate_from_artists(artists, track=None):
     # do we have pickles for these artist names already
     word_maps = []
     all_songs = []
+    all_images = []
     for name in artists:
-        if artist_cache.has_key(name):
+        if artist_cache.has_key(name) and len(artist_cache[name]) == 3:
             word_maps.append(cPickle.load(open(artist_cache[name][0])))
             all_songs += cPickle.load(open(artist_cache[name][1]))
+            all_images += cPickle.load(open(artist_cache[name][2]))
         else:
             try:
                 word_map = wordmapper.create(name)
@@ -54,18 +56,22 @@ def generate_from_artists(artists, track=None):
                 error = "Could not find an artist named {0}".format(name)
                 return render_template('index.html',error=error)
             artist_songs = wordmapper.get_songs(name)
+            artist_images = wordmapper.get_images(name)
             filename = make_file_safe_name(name)
             cPickle.dump(word_map, open(filename+'words','w'))
             cPickle.dump(artist_songs, open(filename+'songs','w'))
-            artist_cache[name] = (filename+'words', filename+'songs')
+            cPickle.dump(artist_images, open(filename+'images','w'))
+            artist_cache[name] = (filename+'words', filename+'songs', filename+'images')
             word_maps.append(word_map)
             all_songs += artist_songs
+            all_images += artist_images
     # make a book
     word_map = wordmapper.consolidate(word_maps)
-    book = generate_book(artists, word_map, all_songs)
-    text = render_template('book.html', book=book, track=track)
+    book = generate_book(artists, word_map, all_songs, all_images)
+    permalink = str(uuid.uuid4())+'.html'
+    text = render_template('book.html', book=book, track=track, permalink=permalink)
     # save text to new file
-    f = codecs.open(str(uuid.uuid4())+'.html',encoding='utf-8',mode='w')
+    f = codecs.open(permalink,encoding='utf-8',mode='w')
     f.write(text)
     return text
 
