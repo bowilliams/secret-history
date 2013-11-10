@@ -2,7 +2,7 @@
 {% block body %}
 <h2>The Secret History of Music</h2>
 <div class="well well-lg">
-<form class="bs-example bs-horizontal" action="{{ url_for('generate') }}" method="post">
+<form class="bs-example bs-horizontal" action="{{ url_for('book') }}" method="post">
   {% if error %}
   <div class="col-lg-4">
     <div class="alert alert-dismissable alert-danger">
@@ -29,5 +29,16 @@
     </div>
   </div>
 </form>
+</div>
+{% if tracks  %}
+<div class="well well-lg">
+  <h4>... or pick a mashup from <a href="http://soundcloud.com/">soundcloud</a></h4>
+  {% for track in tracks %}
+  {% if track.artwork_url %}
+  <img src="{{ track.artwork_url }}"/>
+  {% endif %}
+  &nbsp;<a href="{{ url_for('mashup_book', track_id=track.id)}}">{{ track.title }}</a><br/>
+  {% endfor %}
+{% endif %}
 </div>
 {% endblock %}

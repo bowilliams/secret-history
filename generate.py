@@ -13,7 +13,10 @@ def find_artist_starting_point(word_map, artists):
     for (k1,k2) in word_map.keys():
         if k1 in ccArtists:
             possibles.append((k1, k2))
-    return random.choice(possibles)
+    if len(possibles) < 1:
+        return random.choice(word_map.keys())
+    else:
+        return random.choice(possibles)
 
 def make_chapter(count, songs, text):
     song = random.choice(songs)

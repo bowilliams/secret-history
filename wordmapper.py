@@ -1,10 +1,66 @@
 from pyechonest import artist as en_artist, song as en_song
+import os
+import soundcloud
+import random
 import cPickle
 import re
 import sys
 
 from pyechonest import config
-config.ECHO_NEST_API_KEY=cPickle.load(open('api_key.pkl'))
+config.ECHO_NEST_API_KEY=cPickle.load(open('ellis_key.pkl'))
+
+def get_artists_from_title(title):
+    splits = title.split('vs')
+    # we assume the splits have an artist name, some whitespace,
+    # and some kind of delimiter (usually a dash) from the title 
+    # of the mashup
+    artists = []
+    for split in splits:
+        artist = split.strip()
+        if '-' in artist:
+            artist = artist[:artist.index('-')].strip()
+        for delim in ['&',',']:
+            if delim in artist:
+                # so yeah there's bands like 'huey lewis & the news
+                # or 'crosby, stills & nash', but again
+                # not trying to be perfect here
+                artist = random.choice(artist.split(delim)).strip()
+        artists.append(artist)
+    return artists
+
+def filter_sc_tracks(tracklist):
+    # do we have a cached copy
+    if os.path.exists('mashups.pkl'):
+        return cPickle.load(open('mashups.pkl'))
+    # this is not even trying to be perfect- given a big list
+    # we just want to find a few tracks we think we can pull artist
+    # names from given a pattern of "[artist] vs [artist] - [name]"
+    possibles = []
+    good_tracks = []
+    for t in tracklist:
+        title = t.title.replace('Vs','vs').replace('VS','vs')
+        if not 'vs' in title:
+            continue
+        artists = get_artists_from_title(title)
+        if len(artists) == 2:
+            t.match_artists = artists
+            possibles.append(t)
+    # so now we have some things we think we have artist, let's also
+    # check that we can get an echonest artist
+    # as soon as we have 10, stop
+    for track in possibles:
+        for artist in track.match_artists:
+            try:
+                a = en_artist.Artist(artist)
+                if not en_artist.Artist(artist):
+                    continue
+            except Exception:
+                continue
+        good_tracks.append(track)
+    f = open('mashups.pkl','w')
+    cPickle.dump(good_tracks, f)
+    f.close()
+    return good_tracks
 
 def consolidate(word_maps):
     new_map = {}

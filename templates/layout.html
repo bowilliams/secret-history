@@ -1,15 +1,24 @@
 <!doctype html>
 <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="static/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/css/bootstrap.css">
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+    <script src="http://connect.soundcloud.com/sdk.js"></script>
+    <script>
+      SC.initialize({
+        client_id: '140e38c1e2f7f00bbf3068c52cddd69c'
+        });
+    </script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-    <div class="col-md-4">
+    <div class="col-md-9">
+      {% block body %}{% endblock %}
+    </div>
+    <div class="col-md-3">
+      <div style="margin-top:30px;">
       About this project: The Secret History was created at <a href="http://boston.musichackday.org/2013/">Boston Music Hack Day</a> by Bo Williams.
       <br/>
       You can see the code <a href="http://www.github.com/bowilliams/secret-history">at Github</a> and follow me <a href="http://twitter.com/mrboboto">@mrboboto</a>
     </div>
-    <div class="col-md-8">
-      {% block body %}{% endblock %}
+    <div id="sc_player"></div>
     </div>

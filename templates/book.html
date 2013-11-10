@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 {% block body %}
+{% if track %}
+<script>
+  var track_url = '{{ track.permalink_url }}';
+  SC.oEmbed(track_url, { auto_play: true }, function(oEmbed) {
+    console.log('oEmbed response: ' + oEmbed);
+    $('#sc_player').html(oEmbed.html);
+  });
+</script>
+{% endif %}
 <h1>{{ book['Title'] }}</h1>
     {% for chapter in book['Chapters'] %}
     <h2>{{ chapter['Head'] }}</h2>

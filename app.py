@@ -2,7 +2,8 @@ from flask import Flask, render_template, request
 import cPickle
 import uuid
 import codecs
-
+import random
+import soundcloud
 import wordmapper
 from generate import generate_book
 
@@ -17,11 +18,28 @@ def make_file_safe_name(name):
 
 @app.route("/")
 def hello():
-    return render_template('index.html')
+    # find some mashups
+    sc = soundcloud.Client(client_id='140e38c1e2f7f00bbf3068c52cddd69c')
+    vs_list = sc.get('/tracks', q='vs')
+    tracks = []
+    if len(vs_list) > 1:
+        tracks = wordmapper.filter_sc_tracks(vs_list)
+    return render_template('index.html', tracks=tracks)
 
-@app.route("/generate", methods=['GET', 'POST'])
-def generate():
+@app.route("/book", methods=['POST'])
+def book():
     artists = [request.form['artist1'], request.form['artist2']]
+    return generate_from_artists(artists)
+
+@app.route("/mashup_book/<int:track_id>", methods=['GET'])
+def mashup_book(track_id):
+    # load tracks from cache
+    tracks = cPickle.load(open('mashups.pkl'))
+    t = [t for t in tracks if t.id == track_id][0]
+    artists = wordmapper.get_artists_from_title(t.title)
+    return generate_from_artists(artists, track=t)
+
+def generate_from_artists(artists, track=None):
     # do we have pickles for these artist names already
     word_maps = []
     all_songs = []
@@ -45,7 +63,7 @@ def generate():
     # make a book
     word_map = wordmapper.consolidate(word_maps)
     book = generate_book(artists, word_map, all_songs)
-    text = render_template('book.html', book=book)
+    text = render_template('book.html', book=book, track=track)
     # save text to new file
     f = codecs.open(str(uuid.uuid4())+'.html',encoding='utf-8',mode='w')
     f.write(text)
