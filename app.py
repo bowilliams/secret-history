@@ -28,7 +28,7 @@ def generate():
     for name in artists:
         if artist_cache.has_key(name):
             word_maps.append(cPickle.load(open(artist_cache[name][0])))
-            all_songs.append(cPickle.load(open(artist_cache[name][1])))
+            all_songs += cPickle.load(open(artist_cache[name][1]))
         else:
             word_map = wordmapper.create(name)
             artist_songs = wordmapper.get_songs(name)
